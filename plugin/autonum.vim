@@ -80,7 +80,8 @@ fu! GetStr()
     let num_pat=s:num_pat
     let delim_pat=s:delim_pat
 
-    let sl=search(ind_pat.num_pat.delim_pat, 'nbW')
+    let sstop=search("^$", 'nbW')
+    let sl=search(ind_pat.num_pat.delim_pat, 'nbW', sstop)
     if sl == 0| return "" |endif
 
     if cur_ind >= 1
