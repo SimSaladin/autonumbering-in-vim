@@ -74,7 +74,7 @@ fu! CreateNum()
     return (num =~ '\d') ? 'a. ' : '1. '
 endf
 
-fu! GetStr()
+fu! GetStr(cont)
     let cur_ind=matchend(getline('.'), '^\s*')
     let ind_pat='^\s\{'.cur_ind.'}'
     let num_pat=s:num_pat
@@ -96,7 +96,8 @@ fu! GetStr()
 
     let suff=matchstr(getline(sl), ind_pat.num_pat.'\zs'.delim_pat.'\ze')
     let new_num=IncNum(num)
-    return new_num.suff
+    let slen=strlen(new_num) + strlen(suff)
+    return a:cont ? repeat(' ', slen) : new_num.suff
 endf
 
 fu! PutStr(str)
@@ -116,7 +117,7 @@ endf
 
 fu! AutoNumber(key)
     let key=a:key
-    if key == "return"
+    if key =~ "return"
         let cr1=virtcol('.') != virtcol('$')-1 && virtcol('$') != 1
         let cr2=getline(line(".")) !~ s:ind_pat.s:num_pat.s:delim_pat
         let cr3=getline(line(".")) !~ '^\s*$'
@@ -141,7 +142,7 @@ fu! AutoNumber(key)
         call DelNum()
         let ncmd=(getline('.') =~ '.*\S') ? 'I' : 'a'
         exe "norm! ".ncmd."\<c-t>.\<esc>"
-        let str=GetStr()
+        let str=GetStr(0)
         if str == ""
             let str=CreateNum()
         endif
@@ -151,7 +152,7 @@ fu! AutoNumber(key)
         call DelNum()
         let ncmd=(getline('.') =~ '.*\S') ? 'I' : 'a'
         exe "norm! ".ncmd."\<c-d>.\<esc>"
-        let str=GetStr()
+        let str=GetStr(0)
         if str == ""
             let str=CreateNum()
         endif
@@ -167,7 +168,7 @@ fu! AutoNumber(key)
         exe "norm!I".repeat(' ', l-nl)."\<esc>"
         return 1
     endif
-    let str=GetStr()
+    let str=GetStr(key =~ "continue")
     call PutStr(str)
     return 1
 endf
@@ -184,6 +185,7 @@ fu! AN_Map(op)
     if (s:an_mapped == 0)
         let s:an_mapped = 1
         ino <cr> <esc>:exe AutoNumber("return") ? 'star!' : 'star'<cr>
+        ino <lf> <esc>:exe AutoNumber("return-continue") ? 'star!' : 'star'<cr>
         ino <c-g> <esc>:exe AutoNumber("rm-auto-num") ? 'star!' : 'star'<cr>
         ino <c-t> <esc>:exe AutoNumber("ind-more") ? 'star!' : 'star'<cr>
         ino <c-d> <esc>:exe AutoNumber("ind-less") ? 'star!' : 'star'<cr>
