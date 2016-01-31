@@ -115,13 +115,13 @@ endf
 fu! AutoNumber(key)
     let key=a:key
     if key == "return"
-        let cr1=col('.') != col('$')-1 && col('$') != 1
+        let cr1=virtcol('.') != virtcol('$')-1 && virtcol('$') != 1
         let cr2=getline(line(".")) !~ s:ind_pat.s:num_pat.s:delim_pat
         let cr3=getline(line(".")) !~ '^\s*$'
         if cr1 || (cr2 && cr3)
             "Middle of line, Not a numbered line OR blank line
-            let ins=(col('.') == col('$')-1) ? 0 : 1
-            let ncmd=(col('.') == 1) ? 'i' : 'a'
+            let ins=(virtcol('.') == virtcol('$')-1) ? 0 : 1
+            let ncmd=(virtcol('.') == 1) ? 'i' : 'a'
             exe "norm! ".ncmd."\<cr>.\<bs>\<right>"
             if cr2 == 0
                 "Prev line is a numbered list, so indent cur-line
