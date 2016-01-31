@@ -1,6 +1,7 @@
 "Author  : Arun Easi
+"Edited  : Samuli Thomasson
 "email   : arunke@yahoo.com
-"date    : Tue Oct 21 17:36:31 PDT 2008
+"date    : 2016-01-31 23:20
 "version : 2.0
 "
 "Description: This script auto-numbers a list.
